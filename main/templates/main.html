@@ -1,7 +1,41 @@
-<h1>Toko bola</h1>
-<h5>NPM: </h5>
-<p>{{ npm }}</p>
-<h5>Name: </h5>
-<p>{{ name }}<p>
-<h5>Class: </h5>
-<p>{{ class }}</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Toko Bola</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin:0; padding:0;">
+
+    <!-- Header -->
+    <header style="background-color: rgb(0, 0, 0); color: rgb(255, 255, 255); padding: 15px; text-align: center;">
+        <h1>Toko Bola</h1>
+        
+    </header>
+    <hr>
+
+        <!-- Konten Utama -->
+    <section style="padding: 20px;">
+        <!-- <h2>Data Mahasiswa</h2> -->
+        <table border="1" cellpadding="10" cellspacing="0">
+            <tr>
+                <th align="left">Name</th>
+                <td>{{ name }}</td>
+            </tr>
+            <tr>
+                <th align="left">NPM</th>
+                <td>{{ npm }}</td>
+            </tr>
+            <tr>
+                <th align="left">Class</th>
+                <td>{{ class }}</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background-color: black; color: white; text-align: center; padding: 10px; position: fixed; bottom: 0; width: 100%;">
+        <p>Aplikasi ini dibuat oleh Rasyid - PBP D</p>
+    </footer>
+
+</body>
+</html>
