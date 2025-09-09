@@ -1,2 +1,93 @@
-# TokoBola
-Tugas 2 PBP 
+# Toko Bola ⚽
+
+Proyek ini dibuat untuk memenuhi tugas-individu mata kuliah **PBP**
+
+---
+
+## 🌍 Link Aplikasi
+
+🔗 [klik link ini untuk menuju ke website](https://izzudin-abdul-tokobola.pbp.cs.ui.ac.id/)  
+
+---
+
+## ✅ Step by Step Implementasi
+1. **Inisialisasi Proyek Django**
+   - Membuat virtual environment: `python -m venv env`
+   - Mengaktifkan env: `env\Scripts\activate` 
+   - Install Django: `pip install django`
+   - Membuat project: `django-admin startproject tokobola .`
+   - Membuat app: `py manage.py main`
+
+2. **Mendaftarkan App**
+   - Menambahkan `main` ke dalam `INSTALLED_APPS` di `settings.py`.
+
+3. **Routing**
+   - Menambahkan `path('', include('main.urls'))` di `urls.py` project utama.
+   - Membuat file `urls.py` di `main`
+     
+4. **Views**
+   - Membuat fungsi `show_main` di `views.py` untuk merender template HTML.
+
+5. **Template**
+   - Buat folder `templates/` di dalam `main`.
+   - Menambahkan `main.html` yang berisi konten yang akan ditampilkan di website.
+
+6. **Deployment**
+   - Setup repository GitHub.
+   - Deploy ke Pacil Web Service
+
+---
+## 📊 Alur Request & Response Django
+  ```mermaid
+flowchart TD
+    A[Request via Browser] -->|Browser mengirim request ke server Django| B[urls.py]
+    B -->|URL dicocokkan, lalu diarahkan ke view| C[views.py]
+    C ---->|View meminta atau memodifikasi data di database| D[models.py]
+    C ---->|View mengirim data untuk dirender di template| E[HTML Template]
+    D -->|Data dari database dikembalikan ke view| C
+    E -->|Template menghasilkan HTML jadi| C
+    C -->|HTML dikirim kembali ke browser sebagai response| F[HTTP Response to Client]
+```
+
+---
+## 🛠 Peran settings.py
+settings.py adalah file konfigurasi utama Django yang berfungsi untuk:
+ - Menyimpan konfigurasi database (SQLite/PostgreSQL)
+ - Mendaftarkan aplikasi (INSTALLED_APPS)
+ - Menentukan middleware
+ - Mengatur jalur template dan static file
+ - Menentukan konfigurasi keamanan (secret key, debug mode, allowed hosts)
+
+---
+## 🗄️ Cara Kerja Migrasi Database
+  - Definisikan model di models.py
+  - Jalankan `py manage.py makemigrations` → Django membuat blueprint migrasi
+  - Jalankan `py manage.py migrate` → migrasi diterapkan ke database
+  - Django menyimpan riwayat migrasi, sehingga setiap perubahan yang terjadi pada model bisa dilacak
+
+---
+## 🤔 Kenapa Django?
+  - Batteries included: banyak fitur bawaan (auth, ORM, admin)
+  - Struktur rapi: memisahkan concerns (urls, views, models, templates)
+  - Cocok untuk pemula: dokumentasi lengkap, komunitas besar
+  - Dipakai industri: banyak perusahaan masih menggunakan Django.
+  - Memperkenalkan konsep dasar web dev seperti request-response, MVC/MVT, database, dan deployment.
+
+---
+## 💬 Feedback untuk ASDOS
+So far, kaka asdos sudah sangat baik dalam membantu dalam mengerjakan tutorial, baik saat sesi offline maupun saat sesi online. 
+Mungkin pesanku untuk kaka asdos: semoga selalu sabar dan semangat dalam membimbing kami 😁
+
+---
+## ✨ Credit
+Program ini dibuat oleh Izzudin Abdul Rasyid - 2406495786 - PBP D
+
+
+
+
+
+
+
+
+
+  
