@@ -9,7 +9,7 @@ Proyek ini dibuat untuk memenuhi tugas-individu mata kuliah **PBP**
 🔗 [klik link ini untuk menuju ke website](https://izzudin-abdul-tokobola.pbp.cs.ui.ac.id/)  
 
 ---
-
+#  📝Tugas 1
 ## ✅ Step by Step Implementasi
 1. **Inisialisasi Proyek Django**
    - Membuat virtual environment: `python -m venv env`
