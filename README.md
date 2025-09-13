@@ -74,7 +74,33 @@ settings.py adalah file konfigurasi utama Django yang berfungsi untuk:
   - Memperkenalkan konsep dasar web dev seperti request-response, MVC/MVT, database, dan deployment.
 
 ---
-## 💬 Feedback untuk ASDOS
+## 💬 Feedback untuk ASDOS (Tutorial 1)
+So far, kaka asdos sudah sangat baik dalam membantu dalam mengerjakan tutorial, baik saat sesi offline maupun saat sesi online. 
+Mungkin pesanku untuk kaka asdos: semoga selalu sabar dan semangat dalam membimbing kami 😁
+
+---
+#  📝Tugas 2
+## ✅ Step by Step Implementasi
+
+---
+## 📦 Mengapa Data Delivery Dibutuhkan?
+Data delivery diperlukan agar data dari server dapat dikirim ke client atau aplikasi lain dalam format yang konsisten, dapat dipahami, dan mudah diproses. Tanpa data delivery, aplikasi hanya bisa menampilkan data statis, tidak bisa dinamis.
+
+---
+## ⚔️ JSON VS XML
+   - XML: lebih verbose (bertele-tele), banyak tag, cocok untuk dokumen kompleks.
+   - JSON: ringan, lebih mudah dibaca manusia, langsung dipetakan ke struktur data (dictionary, list).
+   - Alasan JSON lebih populer: sintaks singkat, cepat diproses, langsung kompatibel dengan JavaScript.
+
+---
+## ✅ Fungsi `is_valid()` pada Form Django
+
+
+---
+## 🤔 Kenapa Butuh csrf_token?
+
+---
+## 💬 Feedback untuk ASDOS (Tutorial 2)
 So far, kaka asdos sudah sangat baik dalam membantu dalam mengerjakan tutorial, baik saat sesi offline maupun saat sesi online. 
 Mungkin pesanku untuk kaka asdos: semoga selalu sabar dan semangat dalam membimbing kami 😁
 
