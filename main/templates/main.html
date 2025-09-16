@@ -3,39 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <title>Toko Bola</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f9f9f9;
+        }
+        header {
+            background-color: black;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .biodata {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 50%;
+        }
+        .biodata td {
+            border: 1px solid black;
+            padding: 10px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        .product-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            background-color: white;
+            box-shadow: 0px 2px 5px rgba(255, 0, 0, 0.1);
+        }
+        .product-card img {
+            max-width: 150px;
+            border-radius: 5px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .product-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: rgb(0, 0, 0);
+        }
+        .product-meta {
+            color: #555;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 12px;
+            background: black;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        footer {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 30px;
+        }
+    </style>
 </head>
-<body style="font-family: Arial, sans-serif; margin:0; padding:0;">
-
-    <!-- Header -->
-    <header style="background-color: rgb(0, 0, 0); color: rgb(255, 255, 255); padding: 15px; text-align: center;">
+<body>
+    <header>
         <h1>Toko Bola</h1>
-        
     </header>
-    <hr>
 
-        <!-- Konten Utama -->
-    <section style="padding: 20px;">
-        <!-- <h2>Data Mahasiswa</h2> -->
-        <table border="1" cellpadding="10" cellspacing="0">
-            <tr>
-                <th align="left">Name</th>
-                <td>{{ name }}</td>
-            </tr>
-            <tr>
-                <th align="left">NPM</th>
-                <td>{{ npm }}</td>
-            </tr>
-            <tr>
-                <th align="left">Class</th>
-                <td>{{ class }}</td>
-            </tr>
+    <div class="container">
+        <table class="biodata">
+            <tr><td><b>Name</b></td><td>{{ name }}</td></tr>
+            <tr><td><b>NPM</b></td><td>{{ npm }}</td></tr>
+            <tr><td><b>Class</b></td><td>{{ class }}</td></tr>
         </table>
-    </section>
 
-    <!-- Footer -->
-    <footer style="background-color: black; color: white; text-align: center; padding: 10px; position: fixed; bottom: 0; width: 100%;">
-        <p>Aplikasi ini dibuat oleh Rasyid - PBP D</p>
+        <a href="{% url 'main:create_product' %}" class="btn">+ Add Product</a>
+
+        {% for product in product_list %}
+        <div class="product-card">
+            <div class="product-title">{{ product.name }}</div>
+            <div class="product-meta">Kategori: {{ product.category }} | Harga: Rp {{ product.price }}</div>
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% endif %}
+            <p>{{ product.description|truncatechars:50 }}</p>
+            <a href="{% url 'main:show_product' product.id %}" class="btn">Lihat Detail</a>
+        </div>
+        {% empty %}
+            <p>Belum ada produk yang ditambahkan.</p>
+        {% endfor %}
+    </div>
+
+    <footer>
+        Aplikasi ini dibuat oleh Rasyid - PBP D
     </footer>
-
 </body>
 </html>
