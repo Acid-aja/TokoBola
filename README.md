@@ -94,10 +94,15 @@ Data delivery diperlukan agar data dari server dapat dikirim ke client atau apli
 
 ---
 ## ✅ Fungsi `is_valid()` pada Form Django
-
+- hal ini dibutuhkan untuk mencegah data-data yang tidak sesuai ketentuan masuk lewat form
+- jika data yang dimasukkan `valid` atau sesuai ketentuan, maka return true dan data bisa diakses
+- jika data yang dimasukkan `tidak valid` atau tidak sesuai ketentuan, maka return false dan akan menampilkan error
 
 ---
 ## 🤔 Kenapa Butuh csrf_token?
+   - `csrf_token` mencegah serangan Cross Site Request Forgery, yaitu serangan yang membuat oknum akan membuat pengguna seolah-oleh meminta request tertentu pada website dan kemudian web akan  mengeksekusi permintaan tersebut.
+   - Jika tidak ada token, penyerang bisa membuat form palsu di luar aplikasi kita yang mengeksekusi aksi berbahaya (misal: transfer uang, ganti password).
+   - dengan csrf_token hanya request dari form asli yang diterima oleh server
 
 ---
 ## 💬 Feedback untuk ASDOS (Tutorial 2)
