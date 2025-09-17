@@ -81,6 +81,12 @@ Mungkin pesanku untuk kaka asdos: semoga selalu sabar dan semangat dalam membimb
 ---
 #  📝Tugas 2
 ## ✅ Step by Step Implementasi
+   - Membuat view untuk menampilkan daftar produk (show_main), menambahkan produk (create_product), menampilkan detail (show_product).
+   - Menambahkan template main.html dan create_product.html.
+   - Membuat URL routing untuk semua view.
+   - Menambahkan fitur delivery data (XML, JSON, JSON by id) dengan serializers di views.py.
+   - Mengecek hasil di endpoint /xml/, /json/, /xml/<id>/, /json/<id>/.
+   - Deploy ke Pacil Web Service.
 
 ---
 ## 📦 Mengapa Data Delivery Dibutuhkan?
