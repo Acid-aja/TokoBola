@@ -9,7 +9,7 @@ Proyek ini dibuat untuk memenuhi tugas-individu mata kuliah **PBP**
 🔗 [klik link ini untuk menuju ke website](https://izzudin-abdul-tokobola.pbp.cs.ui.ac.id/)  
 
 ---
-#  📝Tugas 1
+#  📝Tugas 2
 ## ✅ Step by Step Implementasi
 1. **Inisialisasi Proyek Django**
    - Membuat virtual environment: `python -m venv env`
@@ -79,7 +79,7 @@ So far, kaka asdos sudah sangat baik dalam membantu dalam mengerjakan tutorial, 
 Mungkin pesanku untuk kaka asdos: semoga selalu sabar dan semangat dalam membimbing kami 😁
 
 ---
-#  📝Tugas 2
+#  📝Tugas 3
 ## ✅ Step by Step Implementasi
    - Membuat view untuk menampilkan daftar produk (show_main), menambahkan produk (create_product), menampilkan detail (show_product).
    - Menambahkan template main.html dan create_product.html.
