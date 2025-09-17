@@ -110,6 +110,16 @@ Data delivery diperlukan agar data dari server dapat dikirim ke client atau apli
    - Jika tidak ada token, penyerang bisa membuat form palsu di luar aplikasi kita yang mengeksekusi aksi berbahaya (misal: transfer uang, ganti password).
    - dengan csrf_token hanya request dari form asli yang diterima oleh server
 
+## 📸 Screenshoot Postman
+   - XML function
+     <img width="1986" height="1291" alt="Screenshot 2025-09-17 082608" src="https://github.com/user-attachments/assets/34325ebb-323c-48c5-a150-3252b33ddd3d" />
+   - XML by ID function
+     <img width="2003" height="984" alt="Screenshot 2025-09-17 082632" src="https://github.com/user-attachments/assets/e4533df9-0b4d-4706-bd52-a98b103fbc0d" />
+   - JSON function
+     <img width="1983" height="1285" alt="Screenshot 2025-09-17 082901" src="https://github.com/user-attachments/assets/09fe13b6-393f-4ca1-a4ea-7493c1f4da6a" />
+   - JSON by ID function
+     <img width="1985" height="995" alt="Screenshot 2025-09-17 082816" src="https://github.com/user-attachments/assets/c881a647-e84f-4276-af4d-d8e85be1dbeb" />
+
 ---
 ## 💬 Feedback untuk ASDOS (Tutorial 2)
 So far, kaka asdos sudah sangat baik dalam membantu dalam mengerjakan tutorial, baik saat sesi offline maupun saat sesi online. 
