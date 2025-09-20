@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Toko Bola</title>
@@ -9,25 +10,30 @@
             font-family: Arial, Helvetica, sans-serif;
             background-color: #f9f9f9;
         }
+
         header {
             background-color: black;
             color: white;
             padding: 20px;
             text-align: center;
         }
+
         .biodata {
             margin: 20px auto;
             border-collapse: collapse;
             width: 50%;
         }
+
         .biodata td {
             border: 1px solid black;
             padding: 10px;
         }
+
         .container {
             width: 80%;
             margin: auto;
         }
+
         .product-card {
             border: 1px solid #ccc;
             border-radius: 8px;
@@ -36,22 +42,26 @@
             background-color: white;
             box-shadow: 0px 2px 5px rgba(255, 0, 0, 0.1);
         }
+
         .product-card img {
             max-width: 150px;
             border-radius: 5px;
             display: block;
             margin-bottom: 10px;
         }
+
         .product-title {
             font-size: 20px;
             font-weight: bold;
             color: rgb(0, 0, 0);
         }
+
         .product-meta {
             color: #555;
             font-size: 14px;
             margin: 5px 0;
         }
+
         .btn {
             display: inline-block;
             padding: 8px 12px;
@@ -61,6 +71,7 @@
             border-radius: 5px;
             font-size: 14px;
         }
+
         footer {
             background-color: black;
             color: white;
@@ -70,6 +81,7 @@
         }
     </style>
 </head>
+
 <body>
     <header>
         <h1>Toko Bola</h1>
@@ -77,25 +89,44 @@
 
     <div class="container">
         <table class="biodata">
-            <tr><td><b>Name</b></td><td>{{ name }}</td></tr>
-            <tr><td><b>NPM</b></td><td>{{ npm }}</td></tr>
-            <tr><td><b>Class</b></td><td>{{ class }}</td></tr>
+            <tr>
+                <td><b>Name</b></td>
+                <td>{{ name }}</td>
+            </tr>
+            <tr>
+                <td><b>NPM</b></td>
+                <td>{{ npm }}</td>
+            </tr>
+            <tr>
+                <td><b>Class</b></td>
+                <td>{{ class }}</td>
+            </tr>
         </table>
 
         <a href="{% url 'main:create_product' %}" class="btn">+ Add Product</a>
+        <a href="{% url 'main:logout' %}">
+            <button>Logout</button>
+        </a>
+        <h5>Sesi terakhir login: {{ last_login }}</h5>
+        <a href="?filter=all">
+            <button type="button">All Products</button>
+        </a>
+        <a href="?filter=my">
+            <button type="button">My Products</button>
+        </a>
 
         {% for product in product_list %}
         <div class="product-card">
             <div class="product-title">{{ product.name }}</div>
             <div class="product-meta">Kategori: {{ product.category }} | Harga: Rp {{ product.price }}</div>
             {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
             {% endif %}
             <p>{{ product.description|truncatechars:50 }}</p>
             <a href="{% url 'main:show_product' product.id %}" class="btn">Lihat Detail</a>
         </div>
         {% empty %}
-            <p>Belum ada produk yang ditambahkan.</p>
+        <p>Belum ada produk yang ditambahkan.</p>
         {% endfor %}
     </div>
 
@@ -103,4 +134,5 @@
         Aplikasi ini dibuat oleh Rasyid - PBP D
     </footer>
 </body>
+
 </html>
