@@ -125,6 +125,63 @@ Data delivery diperlukan agar data dari server dapat dikirim ke client atau apli
 So far, kaka asdos sudah sangat baik dalam membantu dalam mengerjakan tutorial, baik saat sesi offline maupun saat sesi online. 
 Mungkin pesanku untuk kaka asdos: semoga selalu sabar dan semangat dalam membimbing kami 😁
 
+#  📝Tugas 4
+## ✅ Step by Step Implementasi
+   - Membuat fungsi dan form registrasi.
+   - Membuat fungsi login.
+   - Membuat fungsi logout.
+   - Merestriksi Akses Halaman main.html dan product_detail.html dengan menambahkan `@login_required(login_url='/login')` di atas fungsi show_main() dan        show_product().
+   - Menampilkan detail informasi pengguna yang sedang logged in seperti username dengan `'name': request.user.username` di bagian context dalam                show_main().
+   - Menambahkan cookies untuk menyimpan data "waktu terakhir login" pada user.
+   - menambahkan `from django.contrib.auth.models import User` di models.py (untuk connect user dengan produk).
+   - menambahkan `user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)` di class product untuk menghubungkan satu product dengan satu user       melalui sebuah relationship.
+   - Melakukan migrasi ke database.
+   - Membuat dua (2) akun pengguna dengan masing-masing tiga (3) dummy data menggunakan model produk yang telah dibuat sebelumnya untuk setiap akun             langsung di web
+   - Deploy ke Pacil Web Service.
+
+---
+## 🔑 Django AuthenticationForm
+`AuthenticationForm` adalah form bawaan Django untuk login user.  
+- **Kelebihan**:  
+  - Validasi username & password otomatis.  
+  - Terintegrasi dengan sistem auth Django.  
+  - Mudah dipakai tanpa konfigurasi tambahan.  
+- **Kekurangan**:  
+  - Tidak fleksibel untuk custom field.
+  - UI default sederhana, perlu template override.
+
+---
+## 🛡️ Autentikasi vs Otorisasi
+- **Autentikasi** = proses memastikan identitas user (siapa yang login).  
+- **Otorisasi** = proses memastikan user punya hak untuk melakukan aksi tertentu.  
+
+🔹 **Django mengimplementasikan**:
+- Autentikasi lewat `authenticate()`, `login()`, `request.user`.  
+- Otorisasi lewat `@login_required`, permission (`user.has_perm`), dan group.  
+
+---
+## 💾 Session vs Cookies
+- **Session**  
+  - Disimpan di server, client hanya simpan session ID.  
+  - Aman untuk data sensitif.  
+  - Tapi membebani server jika user banyak.  
+- **Cookies**  
+  - Disimpan di browser client.  
+  - Ringan, tidak membebani server.  
+  - Risiko dicuri lewat XSS/CSRF jika tidak diamankan.  
+
+---
+
+## 🔐 Keamanan Cookies
+- **Risiko**:  
+  - Bisa dicuri lewat XSS.  
+  - Bisa dimodifikasi oleh client.  
+- **Mitigasi Django**:  
+  - `HttpOnly=True` → cookie tidak bisa diakses JS.  
+  - `SESSION_COOKIE_SECURE=True` → hanya dikirim via HTTPS.  
+  - `CSRF token` untuk semua POST form.  
+  - Session rotation setelah login.  
+
 ---
 ## ✨ Credit
 Program ini dibuat oleh Izzudin Abdul Rasyid - 2406495786 - PBP D
