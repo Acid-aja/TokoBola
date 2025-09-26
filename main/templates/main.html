@@ -1,139 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% block title %}Daftar Produk{% endblock %}
+{% block content %}
+<h2 class="mb-4 text-center">Daftar Produk</h2>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Toko Bola</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #f9f9f9;
-        }
-
-        header {
-            background-color: black;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .biodata {
-            margin: 20px auto;
-            border-collapse: collapse;
-            width: 50%;
-        }
-
-        .biodata td {
-            border: 1px solid black;
-            padding: 10px;
-        }
-
-        .container {
-            width: 80%;
-            margin: auto;
-        }
-
-        .product-card {
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 15px 0;
-            background-color: white;
-            box-shadow: 0px 2px 5px rgba(255, 0, 0, 0.1);
-        }
-
-        .product-card img {
-            max-width: 150px;
-            border-radius: 5px;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .product-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: rgb(0, 0, 0);
-        }
-
-        .product-meta {
-            color: #555;
-            font-size: 14px;
-            margin: 5px 0;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 8px 12px;
-            background: black;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        footer {
-            background-color: black;
-            color: white;
-            text-align: center;
-            position: fix;
-            padding: 15px;
-            margin-top: 30px;
-        }
-    </style>
-</head>
-
-<body>
-    <header>
-        <h1>Toko Bola</h1>
-    </header>
-
-    <div class="container">
-        <table class="biodata">
-            <tr>
-                <td><b>Name</b></td>
-                <td>{{ name }}</td>
-            </tr>
-            <tr>
-                <td><b>NPM</b></td>
-                <td>{{ npm }}</td>
-            </tr>
-            <tr>
-                <td><b>Class</b></td>
-                <td>{{ class }}</td>
-            </tr>
-        </table>
-
-        <a href="{% url 'main:create_product' %}" class="btn">+ Add Product</a>
-        <a href="{% url 'main:logout' %}">
-            <button>Logout</button>
-        </a>
-        <h5>Sesi terakhir login: {{ last_login }}</h5>
-        <a href="?filter=all">
-            <button type="button">All Products</button>
-        </a>
-        <a href="?filter=my">
-            <button type="button">My Products</button>
-        </a>
-
-        {% for product in product_list %}
-        <div class="product-card">
-            <div class="product-title">{{ product.name }}</div>
-            <div class="product-meta">Kategori: {{ product.category }} | Harga: Rp {{ product.price }}</div>
-            {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}">
-            {% endif %}
-            <p>{{ product.description|truncatechars:50 }}</p>
-            <a href="{% url 'main:show_product' product.id %}" class="btn">Lihat Detail</a>
-        </div>
-        {% empty %}
-        <p>Belum ada produk yang ditambahkan.</p>
-        {% endfor %}
+{% if products %}
+<div class="row">
+  {% for product in products %}
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow">
+      <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+      <div class="card-body">
+        <h5 class="card-title">{{ product.name }}</h5>
+        <p class="card-text">Rp {{ product.price }}</p>
+        <a href="{% url 'edit_product' product.id %}" class="btn btn-warning me-2">Edit</a>
+        <a href="{% url 'delete_product' product.id %}" class="btn btn-danger">Hapus</a>
+      </div>
     </div>
-
-    <footer>
-        Aplikasi ini dibuat oleh Rasyid - PBP D
-    </footer>
-</body>
-
-</html>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="text-center mt-5">
+  <img src="{% static 'image/empty.png' %}" alt="Empty" class="mb-3" style="max-width: 250px;">
+  <p class="text-muted">Belum ada produk yang terdaftar.</p>
+</div>
+{% endif %}
+{% endblock %}
