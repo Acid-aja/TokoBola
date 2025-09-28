@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load widget_tweaks %}
 {% block meta %}
 <title>Add Product </title>
 {% endblock meta %}
@@ -30,7 +29,7 @@
               {{ field.label }}
             </label>
             <div class="w-full">
-              {{ field|add_class:"bg-gray-700 text-white border border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600" }}
+              {{ field }}
             </div>
             {% if field.help_text %}
               <p class="mt-1 text-sm text-gray-400">{{ field.help_text }}</p>
