@@ -1,25 +1,81 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block meta %}
+<title>{{ product.name }} - Toko product</title>
+{% endblock meta %}
+
 {% block content %}
-<p><a href="{% url 'main:show_main' %}"><button>← Back to Product List</button></a></p>
+<div class="bg-black w-full min-h-screen text-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-<h1>{{ product.name }}</h1>
-<p>
-    <b>{{ product.get_category_display }}</b> |
-    Harga: Rp {{ product.price }} |
-    <i>{{ product.created_at|date:"d M Y, H:i" }}</i> |
-    Views: {{ product.views }}
-</p>
+        <!-- Back Navigation -->
+        <div class="mb-6">
+            <a href="{% url 'main:show_main' %}"
+               class="text-white hover:text-red-600 font-medium transition-colors">
+               ← Back to home
+            </a>
+        </div>
 
-{% if product.thumbnail %}
-<img src="{{ product.thumbnail }}" alt="Product thumbnail" width="300">
-<br /><br />
-{% endif %}
+        <!-- Article -->
+        <article class="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
 
-<p>{{ product.description }}</p>
+            <!-- Header -->
+            <div class="p-6 sm:p-8">
+                <div class="flex flex-wrap items-center gap-2 mb-4">
+                    <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-red-600 text-white">
+                        {{ product.get_category_display }}
+                    </span>
+                    {% if product.is_featured %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-white text-red-600">
+                        Featured
+                    </span>
+                    {% endif %}
+                </div>
 
-{% if product.user %}
-<p>Seller: {{ product.user.username }}</p>
-{% else %}
-<p>Seller: Anonymous</p>
-{% endif %}
+                <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-4 text-white">
+                    {{ product.name }}
+                </h1>
+                <h2 class="text-xl font-semibold text-red-600 mb-4">
+                    Rp. {{ product.price | intcomma }}
+                </h2>
+            </div>
+
+            <!-- Featured Image -->
+            {% if product.thumbnail %}
+            <div class="px-6 sm:px-8 overflow-hidden rounded-lg">
+                <img src="{{ product.thumbnail }}" alt="{{ product.name }}"
+                     class="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg transform hover:scale-105 transition-transform duration-300">
+            </div>
+            {% endif %}
+
+            <!-- Content -->
+            <div class="p-6 sm:p-8 bg-gray-900">
+                <div class="prose prose-lg max-w-none text-white">
+                    <div class="text-gray-200 leading-relaxed whitespace-pre-line text-base sm:text-lg">
+                        {{ product.description }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seller Info -->
+            <div class="border-t border-gray-800 p-6 sm:p-8 bg-gray-900">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="font-medium text-white">
+                            {% if product.user %}
+                            <p>Seller: {{ product.user.username }}</p>
+                            {% else %}
+                            <p>Seller: Anonymous</p>
+                            {% endif %}
+                        </div>
+                        <p class="text-sm text-red-600">Seller</p>
+                    </div>
+                </div>
+            </div>
+
+        </article>
+    </div>
+</div>
 {% endblock content %}
