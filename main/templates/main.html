@@ -7,6 +7,7 @@
 
 {% block content %}
 {% include 'navbar.html' %}
+
 <div class="bg-black w-full pt-16 min-h-screen text-white">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
@@ -16,8 +17,7 @@
     </div>
 
     <!-- Filter Section -->
-    <div
-      class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 bg-gray-900 rounded-lg border border-gray-800 p-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 bg-gray-900 rounded-lg border border-gray-800 p-4">
       <div class="flex space-x-3 mb-4 sm:mb-0">
         <a href="?"
           class="{% if request.GET.filter == 'all' or not request.GET.filter %}bg-red-600 text-white{% else %}bg-gray-800 text-gray-300 border border-gray-700{% endif %} px-4 py-2 rounded-md font-medium transition-colors hover:bg-red-600 hover:text-white">
@@ -27,35 +27,37 @@
           class="{% if request.GET.filter == 'my' %}bg-red-600 text-white{% else %}bg-gray-800 text-gray-300 border border-gray-700{% endif %} px-4 py-2 rounded-md font-medium transition-colors hover:bg-red-600 hover:text-white">
           My product
         </a>
-        {% if user.is_authenticated %}
-        <div class="text-sm text-gray-400">
-          Last login: {{ last_login }}
-        </div>
-        {% endif %}
-
       </div>
-
-      <!-- Product Grid -->
-      {% if not product_list %}
-      <div class="bg-gray-900 rounded-lg border border-gray-800 p-12 text-center">
-        <div class="w-32 h-32 mx-auto mb-4">
-          <img src="{% static 'image/no-product.png' %}" alt="No product available"
-            class="w-full h-full object-contain">
-        </div>
-        <h3 class="text-lg font-medium text-white mb-2">No product found</h3>
-        <p class="text-gray-400 mb-6">Be the first to share football product with the community.</p>
-        <a href="{% url 'main:create_product' %}"
-          class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
-          Create product
-        </a>
-      </div>
-      {% else %}
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for product in product_list %}
-        {% include 'card_product.html' with product=product %}
-        {% endfor %}
+      
+      {% if user.is_authenticated %}
+      <div class="text-sm text-gray-400">
+        Last login: {{ last_login }}
       </div>
       {% endif %}
     </div>
+
+    <!-- Product Grid Section -->
+    {% if not product_list %}
+    <div class="bg-gray-900 rounded-lg border border-gray-800 p-12 text-center">
+      <div class="w-32 h-32 mx-auto mb-4">
+        <img src="{% static 'image/no-product.png' %}" alt="No product available"
+          class="w-full h-full object-contain">
+      </div>
+      <h3 class="text-lg font-medium text-white mb-2">No product found</h3>
+      <p class="text-gray-400 mb-6">Be the first to share football product with the community.</p>
+      <a href="{% url 'main:create_product' %}"
+        class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
+        Create product
+      </a>
+    </div>
+    {% else %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for product in product_list %}
+      {% include 'card_product.html' with product=product %}
+      {% endfor %}
+    </div>
+    {% endif %}
+
   </div>
-  {% endblock content %}
+</div>
+{% endblock content %}

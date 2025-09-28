@@ -2,12 +2,18 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Product(models.Model):
+    CATEGORY_CHOICES = [
+        ('random', 'Random'),
+        ('jersey', 'Jersey'),
+        ('bola', 'Bola'),
+    ]
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100)  
     price = models.IntegerField()
     description = models.TextField()
     thumbnail = models.URLField()
-    category = models.CharField(max_length=50)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='random')
     is_featured = models.BooleanField(default=False)
     views = models.PositiveIntegerField(default=0)
 

@@ -16,5 +16,8 @@ class ProductForm(ModelForm):
             'description': forms.Textarea(attrs={
                 'class': 'bg-gray-800 text-white border border-red-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 w-full'
             }),
+            'thumbnail': forms.Textarea(attrs={
+                'class': 'bg-gray-800 text-white border border-red-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 w-full'
+            }),
         }
 
