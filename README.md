@@ -183,6 +183,87 @@ Mungkin pesanku untuk kaka asdos: semoga selalu sabar dan semangat dalam membimb
   - Session rotation setelah login.  
 
 ---
+# 📝 Tugas 5
+
+## ✅ Step by Step Implementasi
+
+---
+
+## 🎨 Urutan Prioritas CSS Selector
+
+1. **Origin & Importance (Asal & Tingkat Kepentingan)**  
+   CSS bisa berasal dari beberapa sumber:  
+   - *User agent stylesheet* → default bawaan browser.  
+   - *Author stylesheet* → CSS yang kita tulis di project.  
+   - *User stylesheet* → CSS kustom dari pengguna (kalau ada).  
+
+   Tingkat kepentingan juga dipengaruhi oleh deklarasi `!important`.  
+   Jika sebuah aturan diberi `!important`, maka akan menimpa aturan lain meskipun specificity-nya lebih rendah.  
+
+2. **Selector Specificity (Spesifisitas Selector)**  
+   Ini adalah aturan seberapa *spesifik* sebuah selector:  
+   - Inline style → paling kuat.  
+   - ID selector (`#id`).  
+   - Class, attribute, pseudo-class (`.class`, `[type=text]`, `:hover`).  
+   - Element/tag selector (`div`, `p`, `h1`).  
+
+   Semakin spesifik selector, semakin besar prioritasnya.  
+
+3. **Order of Appearance (Urutan Penulisan)**  
+   Jika dua aturan punya specificity yang sama, maka aturan yang ditulis paling terakhir dalam file CSS (atau yang dipanggil terakhir) akan berlaku.  
+
+4. **Initial & Inherited Properties (Nilai Awal & Pewarisan)**  
+   - *Initial value* → nilai default sebuah properti jika tidak ada aturan CSS yang mengaturnya (misalnya `display: inline` untuk `<span>`).  
+   - *Inherited value* → beberapa properti diturunkan otomatis dari elemen induk ke anak (misalnya `color`, `font-family`).  
+
+   Kalau tidak diwariskan, properti itu akan pakai nilai *initial* kecuali kita atur manual.  
+
+---
+
+## 📱 Pentingnya Responsive Design
+
+Responsive design memastikan tampilan website menyesuaikan ukuran layar (desktop, tablet, smartphone). Hal ini penting karena:  
+- Pengguna mengakses website dari berbagai device.  
+- Meningkatkan pengalaman pengguna (UX).  
+- SEO friendly (Google memprioritaskan web yang mobile-friendly).  
+
+🔹 **Contoh aplikasi dengan responsive design**:  
+- Twitter Web → tampilan feed dan sidebar otomatis menyesuaikan layar.  
+- Tokopedia → di HP hanya tampil produk & menu utama, di desktop muncul filter dan kategori lebih lengkap.  
+
+🔹 **Contoh aplikasi tanpa responsive design**:  
+- Website sekolah lama (misalnya situs sekolah dengan tabel fixed pixel) → jika dibuka di HP, teks mengecil, harus di-zoom manual.  
+
+---
+
+## 📏 Margin, Border, dan Padding
+
+- **Margin** = jarak luar antar elemen.  
+- **Border** = garis tepi elemen.  
+- **Padding** = jarak dalam antara konten dengan border.  
+
+```css
+.kotak {
+  margin: 20px;              /* jarak antar elemen */
+  border: 2px solid black;   /* garis tepi */
+  padding: 15px;             /* jarak antara konten dan border */
+}
+```
+
+
+## 🧩 Flexbox vs Grid Layout
+- **Flexbox**  
+  - Layout satu dimensi (horizontal/vertical).
+  - Cocok untuk align item dalam baris/kolom.
+  - Contoh: navbar, daftar produk.
+- **Grid Layout**  
+   - Layout dua dimensi (baris + kolom).
+   - Cocok untuk struktur kompleks (dashboard, galeri).
+   - Contoh: halaman dengan sidebar, konten utama, footer. 
+
+
+
+
 ## ✨ Credit
 Program ini dibuat oleh Izzudin Abdul Rasyid - 2406495786 - PBP D
 
