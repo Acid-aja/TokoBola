@@ -192,7 +192,7 @@ Mungkin pesanku untuk kaka asdos: semoga selalu sabar dan semangat dalam membimb
    - Membuat file edit_product.html pada main/templates
    - menambahkan button edit di card_product.html
 2. Membuat fitur delete
-   -- menembahkan fungsi delete_product di views.py
+   - menembahkan fungsi delete_product di views.py
    - menambahkan `path('product/<int:id>/delete', delete_product, name='delete_product'),` di urls.py
    - menambahkan button edit di card_product.html
 3. Menambahkan navigation bar
