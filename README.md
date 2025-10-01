@@ -186,7 +186,24 @@ Mungkin pesanku untuk kaka asdos: semoga selalu sabar dan semangat dalam membimb
 # 📝 Tugas 5
 
 ## ✅ Step by Step Implementasi
-
+1. Membuat fitur edit
+   - menembahkan fungsi edit_product di views.py
+   - menambahkan `path('product/<int:id>/edit', edit_product, name='edit_product')` di urls.py
+   - Membuat file edit_product.html pada main/templates
+   - menambahkan button edit di card_product.html
+2. Membuat fitur delete
+   -- menembahkan fungsi delete_product di views.py
+   - menambahkan `path('product/<int:id>/delete', delete_product, name='delete_product'),` di urls.py
+   - menambahkan button edit di card_product.html
+3. Menambahkan navigation bar
+   - membuat navbar.html di templates
+   - include navbar.html di main.html
+4. Styling Website
+   - menambahkan konfigurasi tailwind di base.html
+   - styling tiap file di main/templates
+   - styling navbar.html
+   - menambahkan css.style di folder static/css
+   - menambahkan no-product.png di folder static/image
 ---
 
 ## 🎨 Urutan Prioritas CSS Selector
