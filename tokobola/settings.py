@@ -146,10 +146,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 if DEBUG:
     STATICFILES_DIRS = [
-        BASE_DIR / 'static' # merujuk ke /static root project pada mode development
+        BASE_DIR / 'static' 
     ]
 else:
-    STATIC_ROOT = BASE_DIR / 'static' # merujuk ke /static root project pada mode production
+    STATIC_ROOT = BASE_DIR / 'static' 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
