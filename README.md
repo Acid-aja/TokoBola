@@ -279,13 +279,13 @@ Responsive design memastikan tampilan website menyesuaikan ukuran layar (desktop
    - Contoh: halaman dengan sidebar, konten utama, footer. 
 
 #  📝Tugas 6
-### 1. Apa perbedaan antara synchronous request dan asynchronous request?
+## ⚡ 1. Synchronous vs Asynchronous Request
 - **Synchronous request**: browser akan menunggu sampai server merespon sebelum melanjutkan eksekusi kode berikutnya. Hal ini membuat halaman "ter-block" sementara waktu.
 - **Asynchronous request (AJAX)**: browser bisa mengirim request ke server di background tanpa menghentikan aktivitas lain. Halaman tidak perlu reload penuh, cukup update bagian tertentu saja.
 
 ---
 
-### 2. Bagaimana AJAX bekerja di Django (alur request–response)?
+## 🔄 2. Alur Kerja AJAX di Django
 1. **User melakukan aksi** (misalnya klik tombol).
 2. **JavaScript (AJAX)** mengirim request ke endpoint Django tertentu (misalnya ke view yang mengembalikan JSON).
 3. **Django view** menerima request, memproses data (query database, validasi, dll.), lalu mengembalikan response (biasanya JSON).
@@ -293,7 +293,7 @@ Responsive design memastikan tampilan website menyesuaikan ukuran layar (desktop
 
 ---
 
-### 3. Apa keuntungan menggunakan AJAX dibandingkan render biasa di Django?
+## 🚀 3. Keuntungan AJAX dibandingkan Render Biasa
 - Tidak perlu reload seluruh halaman (lebih cepat dan efisien).
 - UX lebih baik karena tampilan terasa lebih interaktif.
 - Bandwidth lebih hemat (hanya data yang dibutuhkan saja yang dikirim).
@@ -302,7 +302,7 @@ Responsive design memastikan tampilan website menyesuaikan ukuran layar (desktop
 
 ---
 
-### 4. Bagaimana cara memastikan keamanan saat menggunakan AJAX untuk fitur Login dan Register di Django?
+## 🛡️ 4. Keamanan AJAX untuk Login & Register
 - **Gunakan CSRF Token** pada setiap AJAX request agar Django bisa memverifikasi bahwa request berasal dari sumber yang sah.
 - **Validasi input** secara ketat di server-side (jangan hanya di client-side).
 - **Gunakan HTTPS** untuk mengenkripsi data sensitif seperti username/password.
@@ -311,7 +311,7 @@ Responsive design memastikan tampilan website menyesuaikan ukuran layar (desktop
 
 ---
 
-### 5. Bagaimana AJAX mempengaruhi pengalaman pengguna (User Experience) pada website?
+## 🌟 5. Dampak AJAX pada User Experience (UX)
 - User tidak perlu menunggu reload penuh halaman → lebih cepat.
 - Tampilan terasa mulus dan interaktif (mirip aplikasi desktop/mobile).
 - Respon instan membuat user lebih nyaman (misalnya tombol "Like" langsung berubah tanpa refresh).
