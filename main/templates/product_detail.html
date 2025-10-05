@@ -3,7 +3,7 @@
 {% load humanize %}
 
 {% block meta %}
-<title>{{ product.name }} - Toko product</title>
+<title>Detail Produk - Toko Bola</title>
 {% endblock meta %}
 
 {% block content %}
@@ -12,49 +12,48 @@
 
         <!-- Back Navigation -->
         <div class="mb-6">
-            <a href="{% url 'main:show_main' %}"
-               class="text-white hover:text-red-600 font-medium transition-colors">
-               ← Back to home
+            <a href="{% url 'main:show_main' %}" class="text-white hover:text-red-600 font-medium transition-colors">
+                ← Back to home
             </a>
         </div>
 
         <!-- Article -->
-        <article class="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
+        <article
+            class="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
 
             <!-- Header -->
             <div class="p-6 sm:p-8">
                 <div class="flex flex-wrap items-center gap-2 mb-4">
-                    <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-red-600 text-white">
-                        {{ product.get_category_display }}
+                    <span id="product-category"
+                        class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-red-600 text-white">
+                        <!-- category placeholder -->
                     </span>
-                    {% if product.is_featured %}
-                    <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-white text-red-600">
+                    <span id="product-featured"
+                        class="hidden inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-white text-red-600">
                         Featured
                     </span>
-                    {% endif %}
                 </div>
 
-                <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-4 text-white">
-                    {{ product.name }}
+                <h1 id="product-name" class="text-3xl sm:text-4xl font-bold leading-tight mb-4 text-white">
+                    <!-- name placeholder -->
                 </h1>
-                <h2 class="text-xl font-semibold text-red-600 mb-4">
-                    Rp. {{ product.price | intcomma }}
+                <h2 id="product-price" class="text-xl font-semibold text-red-600 mb-4">
+                    <!-- price placeholder -->
                 </h2>
             </div>
 
             <!-- Featured Image -->
-            {% if product.thumbnail %}
             <div class="px-6 sm:px-8 overflow-hidden rounded-lg">
-                <img src="{{ product.thumbnail }}" alt="{{ product.name }}"
-                     class="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg transform hover:scale-105 transition-transform duration-300">
+                <img id="product-thumbnail" src="" alt="Thumbnail Produk"
+                    class="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg transform hover:scale-105 transition-transform duration-300 hidden">
             </div>
-            {% endif %}
 
             <!-- Content -->
             <div class="p-6 sm:p-8 bg-gray-900">
                 <div class="prose prose-lg max-w-none text-white">
-                    <div class="text-gray-200 leading-relaxed whitespace-pre-line text-base sm:text-lg">
-                        {{ product.description }}
+                    <div id="product-description"
+                        class="text-gray-200 leading-relaxed whitespace-pre-line text-base sm:text-lg">
+                        <!-- description placeholder -->
                     </div>
                 </div>
             </div>
@@ -64,11 +63,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <div class="font-medium text-white">
-                            {% if product.user %}
-                            <p>Seller: {{ product.user.username }}</p>
-                            {% else %}
-                            <p>Seller: Anonymous</p>
-                            {% endif %}
+                            <p id="product-seller">Seller: ...</p>
                         </div>
                         <p class="text-sm text-red-600">Seller</p>
                     </div>
@@ -78,4 +73,38 @@
         </article>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        // ambil productId dari URL (misal /product/3/)
+        const pathParts = window.location.pathname.split("/");
+        const productId = pathParts[pathParts.length - 2];
+
+        try {
+            const response = await fetch(`/json/${productId}/`);
+            const data = await response.json();
+
+            // isi placeholder
+            document.getElementById("product-name").textContent = data.name;
+            document.getElementById("product-price").textContent = "Rp " + data.price.toLocaleString("id-ID");
+            document.getElementById("product-category").textContent = data.category;
+
+            if (data.is_featured) {
+                document.getElementById("product-featured").classList.remove("hidden");
+            }
+
+            if (data.thumbnail) {
+                const img = document.getElementById("product-thumbnail");
+                img.src = data.thumbnail;
+                img.classList.remove("hidden");
+            }
+
+            document.getElementById("product-description").textContent = data.description;
+            document.getElementById("product-seller").textContent = "Seller: " + (data.user || "Anonymous");
+
+        } catch (error) {
+            console.error("Gagal load product:", error);
+        }
+    });
+</script>
 {% endblock content %}

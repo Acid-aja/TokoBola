@@ -16,6 +16,7 @@ class Product(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='random')
     is_featured = models.BooleanField(default=False)
     views = models.PositiveIntegerField(default=0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) 
 
     def increment_views(self):
         """Tambah 1 ke jumlah views produk"""
