@@ -1,14 +1,45 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    {% block meta %} {% endblock meta %}
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
-  </head>
-  <body>
-    {% block content %} {% endblock content %} {% include 'toast.html' %}
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {% block meta %} {% endblock meta %}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{% static 'css/global.css' %}" />
+</head>
+
+<body>
+  <!-- Toast Notification -->
+  <div id="toast"
+    class="fixed top-5 right-5 bg-green-600 text-white px-4 py-3 rounded shadow-lg opacity-0 transition-opacity duration-300 z-50">
+    <strong id="toast-title"></strong>
+    <p id="toast-message"></p>
+  </div>
+  {% block content %} {% endblock content %} {% include 'toast.html' %} {% include 'modal.html' %}
+</body>
+
 </html>
+
+<script>
+  function showToast(title, message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const toastTitle = document.getElementById('toast-title');
+    const toastMessage = document.getElementById('toast-message');
+
+    toastTitle.textContent = title;
+    toastMessage.textContent = message;
+
+    toast.classList.remove('bg-green-600', 'bg-red-600');
+    toast.classList.add(type === 'success' ? 'bg-green-600' : 'bg-red-600');
+
+    toast.classList.remove('opacity-0');
+    toast.classList.add('opacity-100');
+
+    setTimeout(() => {
+      toast.classList.remove('opacity-100');
+      toast.classList.add('opacity-0');
+    }, 3000);
+  }
+</script>

@@ -98,4 +98,32 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('loginForm');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    try {
+      const response = await fetch(window.location.href, {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: formData
+      });
+      const data = await response.json();
+      if (data.success) {
+        showToast('Login Successful', data.message || 'Welcome back!', 'success');
+        setTimeout(() => window.location.href = data.redirect || '/', 1000);
+      } else {
+        showToast('Login Failed', data.error || 'Invalid username or password', 'error');
+      }
+    } catch(err) {
+      showToast('Error', 'Something went wrong', 'error');
+      console.error(err);
+    }
+  });
+});
+</script>
+
 {% endblock content %}

@@ -11,6 +11,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 @login_required(login_url='/login')
 def show_main(request):
@@ -157,6 +159,34 @@ def edit_product(request, id):
     return render(request, "edit_product.html", context)
 
 def delete_product(request, id):
-    product = get_object_or_404(Product, pk=id)
-    product.delete()
-    return HttpResponseRedirect(reverse('main:show_main'))
+    if request.method == "POST":
+        product = get_object_or_404(Product, pk=id)
+        product.delete()
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
+
+
+@require_POST
+@csrf_exempt
+def add_product_entry_ajax(request):
+    if request.method == 'POST':
+        user = request.user if request.user.is_authenticated else None
+        name = request.POST.get('name')
+        price = request.POST.get('price')
+        description = request.POST.get('description')
+        thumbnail = request.POST.get('thumbnail')
+        category = request.POST.get('category')
+        is_featured = request.POST.get('is_featured') == 'on'
+
+        Product.objects.create(
+            user=user,
+            name=name,
+            price=int(price),
+            description=description,
+            thumbnail=thumbnail,
+            category=category,
+            is_featured=is_featured,
+        )
+        return JsonResponse({"status": "success"})
+    return JsonResponse({"status": "fail"}, status=400)

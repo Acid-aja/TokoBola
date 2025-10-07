@@ -1,6 +1,6 @@
 {% load static %}
 {% load humanize %}
-<article class="bg-gray-900 rounded-lg border border-gray-800 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+<article id="product-{{product.id}}" class="bg-gray-900 rounded-lg border border-gray-800 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
   
   <!-- Thumbnail -->
   <div class="aspect-[16/9] relative overflow-hidden">
@@ -52,7 +52,7 @@
         <a href="{% url 'main:edit_product' product.id %}" class="text-gray-300 hover:text-white text-sm transition-colors">
           Edit
         </a>
-        <a href="{% url 'main:delete_product' product.id %}" class="text-red-600 hover:text-red-700 text-sm transition-colors">
+        <a href="javascript:void(0);" onclick="showDeleteModal({{ product.id }})" class="text-red-600 hover:text-red-700 text-sm transition-colors">
           Delete
         </a>
       </div>

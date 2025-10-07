@@ -1,0 +1,142 @@
+<!-- Modal Add New Product -->
+<div id="crudModal" class="hidden fixed inset-0 z-50 w-full flex items-center justify-center bg-gray-900 bg-opacity-70">
+    <div id="crudModalContent"
+        class="bg-gray-900 text-white rounded-lg shadow-lg w-5/6 sm:w-3/5 md:w-1/2 lg:w-2/5 xl:w-1/3 max-h-screen overflow-y-auto border border-gray-800">
+
+        <!-- Modal header -->
+        <div class="flex items-center justify-between p-4 border-b border-gray-800">
+            <div>
+                <h3 class="text-xl font-semibold">Add New Product</h3>
+                <p class="text-sm text-gray-400 mt-1">Add your product in this page</p>
+            </div>
+            <button type="button" class="text-gray-400 hover:text-white p-1.5 rounded-md" onclick="hideModal()">
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="px-6 py-4 space-y-6">
+            <form id="productForm">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium">Name</label>
+                    <input type="text" id="name" name="name"
+                        class="mt-1 block w-full border border-gray-700 bg-gray-800 rounded-md px-3 py-2 text-white placeholder-gray-400"
+                        placeholder="Enter product name" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="price" class="block text-sm font-medium">Price</label>
+                    <input type="number" id="price" name="price"
+                        class="mt-1 block w-full border border-gray-700 bg-gray-800 rounded-md px-3 py-2 text-white placeholder-gray-400"
+                        placeholder="Enter product price" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="description" class="block text-sm font-medium">Description</label>
+                    <textarea id="description" name="description" rows="3"
+                        class="mt-1 block w-full border border-gray-700 bg-gray-800 rounded-md px-3 py-2 text-white placeholder-gray-400"
+                        placeholder="Enter product description" required></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label for="thumbnail" class="block text-sm font-medium">Thumbnail URL</label>
+                    <input type="url" id="thumbnail" name="thumbnail"
+                        class="mt-1 block w-full border border-gray-700 bg-gray-800 rounded-md px-3 py-2 text-white placeholder-gray-400"
+                        placeholder="https://example.com/image.jpg">
+                </div>
+
+                <div class="mb-4">
+                    <label for="category" class="block text-sm font-medium">Category</label>
+                    <select id="category" name="category"
+                        class="mt-1 block w-full border border-gray-700 bg-gray-800 rounded-md px-3 py-2 text-white"
+                        required>
+                        <option value="" class="text-gray-400">Choose a category</option>
+                        <option value="transfer">Transfer</option>
+                        <option value="update">Update</option>
+                        <option value="exclusive">Exclusive</option>
+                        <option value="match">Match</option>
+                        <option value="rumor">Rumor</option>
+                        <option value="analysis">Analysis</option>
+                        <option value="random">Random</option>
+                    </select>
+                </div>
+
+                <div class="mb-4 flex items-center">
+                    <input id="is_featured" name="is_featured" type="checkbox"
+                        class="w-4 h-4 text-green-600 bg-gray-800 border-gray-700 rounded">
+                    <label for="is_featured" class="ml-2 text-sm font-medium">Is featured</label>
+                </div>
+            </form>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="flex flex-col sm:flex-row gap-4 p-6 border-t border-gray-800">
+            <button type="button"
+                class="order-2 sm:order-1 px-6 py-3 border border-gray-700 text-gray-400 rounded-md font-medium hover:bg-gray-800 hover:text-white"
+                onclick="hideModal()">Cancel</button>
+            <button type="submit" id="submitProduct" form="productForm"
+                class="order-1 sm:order-2 flex-1 bg-red-600 text-white px-6 py-3 rounded-md font-medium hover:bg-red-700">Add
+                Product</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showModal() {
+        const modal = document.getElementById('crudModal');
+        const modalContent = document.getElementById('crudModalContent');
+
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modalContent.classList.remove('opacity-0', 'scale-95');
+            modalContent.classList.add('opacity-100', 'scale-100');
+        }, 50);
+    }
+
+    function hideModal() {
+        const modal = document.getElementById('crudModal');
+        const modalContent = document.getElementById('crudModalContent');
+
+        modalContent.classList.remove('opacity-100', 'scale-100');
+        modalContent.classList.add('opacity-0', 'scale-95');
+
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 150);
+    }
+
+    async function addProductEntry() {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        const response = await fetch("{% url 'main:add_product_entry_ajax' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken
+            },
+            body: new FormData(document.querySelector('#productForm')),
+        });
+
+        if (response.ok) {
+            document.getElementById("productForm").reset();
+            hideModal();
+            showToast('Product added successfully!', '', 'success');
+            document.dispatchEvent(new CustomEvent('productAdded'));
+        } else {
+            showToast('Failed to add product.', '', 'error');
+        }
+
+        return false;
+    }
+
+
+    document.getElementById("productForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        addProductEntry();
+    })
+</script>
