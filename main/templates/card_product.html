@@ -1,18 +1,20 @@
 {% load static %}
 {% load humanize %}
-<article id="product-{{product.id}}" class="bg-gray-900 rounded-lg border border-gray-800 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-  
+<article id="product-{{product.id}}"
+  class="bg-gray-900 rounded-lg border border-gray-800 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+
   <!-- Thumbnail -->
   <div class="aspect-[16/9] relative overflow-hidden">
     {% if product.thumbnail %}
-      <img src="{{ product.thumbnail }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+    <img src="{{ product.thumbnail }}" alt="{{ product.name }}" class="w-full h-full object-cover">
     {% else %}
-      <div class="w-full h-full bg-gray-700"></div>
+    <div class="w-full h-full bg-gray-700"></div>
     {% endif %}
 
     <!-- Category Badge -->
     <div class="absolute top-3 left-3">
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-red-600 text-white transition-transform transform hover:scale-110">
+      <span
+        class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-red-600 text-white transition-transform transform hover:scale-110">
         {{ product.get_category_display }}
       </span>
     </div>
@@ -29,15 +31,15 @@
 
   <!-- Content -->
   <div class="p-5 text-white">
-    
+
     <h3 class="text-lg font-semibold mb-2 line-clamp-2 leading-tight">
       <a href="{% url 'main:show_product' product.id %}" class="hover:text-red-600 transition-colors">
         {{ product.name }}
       </a>
     </h3>
-    
+
     <p class="text-red-600 font-bold mb-2">Rp {{ product.price|intcomma }}</p>
-    
+
     <p class="text-gray-400 text-sm leading-relaxed line-clamp-3 mb-4">
       {{ product.description|truncatewords:20 }}
     </p>
@@ -49,10 +51,12 @@
         Read more
       </a>
       <div class="flex space-x-2">
-        <a href="{% url 'main:edit_product' product.id %}" class="text-gray-300 hover:text-white text-sm transition-colors">
+        <a href="javascript:void(0);" onclick="openEditModal({{ product.id }})"
+          class="text-gray-300 hover:text-white text-sm transition-colors">
           Edit
         </a>
-        <a href="javascript:void(0);" onclick="showDeleteModal({{ product.id }})" class="text-red-600 hover:text-red-700 text-sm transition-colors">
+        <a href="javascript:void(0);" onclick="showDeleteModal({{ product.id }})"
+          class="text-red-600 hover:text-red-700 text-sm transition-colors">
           Delete
         </a>
       </div>
@@ -64,7 +68,6 @@
       </a>
     </div>
     {% endif %}
-    
+
   </div>
 </article>
-

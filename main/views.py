@@ -145,18 +145,18 @@ def logout_user(request):
     response.delete_cookie('last_login')
     return response
 
-def edit_product(request, id):
-    product = get_object_or_404(Product, pk=id)
-    form = ProductForm(request.POST or None, instance=product)
-    if form.is_valid() and request.method == 'POST':
-        form.save()
-        return redirect('main:show_main')
+# def edit_product(request, id):
+#     product = get_object_or_404(Product, pk=id)
+#     form = ProductForm(request.POST or None, instance=product)
+#     if form.is_valid() and request.method == 'POST':
+#         form.save()
+#         return redirect('main:show_main')
 
-    context = {
-        'form': form
-    }
+#     context = {
+#         'form': form
+#     }
 
-    return render(request, "edit_product.html", context)
+#     return render(request, "edit_product.html", context)
 
 def delete_product(request, id):
     if request.method == "POST":
@@ -190,3 +190,30 @@ def add_product_entry_ajax(request):
         )
         return JsonResponse({"status": "success"})
     return JsonResponse({"status": "fail"}, status=400)
+
+def get_product(request, id):
+    from django.http import JsonResponse
+    product = Product.objects.get(pk=id)
+    return JsonResponse({
+        'id': product.id,
+        'name': product.name,
+        'price': product.price,
+        'description': product.description,
+        'thumbnail': product.thumbnail,
+        'category': product.category,
+        'is_featured': product.is_featured,
+    })
+
+def edit_product(request, id):
+    from django.http import JsonResponse
+    if request.method == "POST":
+        product = Product.objects.get(pk=id)
+        product.name = request.POST.get("name")
+        product.price = request.POST.get("price")
+        product.description = request.POST.get("description")
+        product.thumbnail = request.POST.get("thumbnail")
+        product.category = request.POST.get("category")
+        product.is_featured = bool(request.POST.get("is_featured"))
+        product.save()
+        return JsonResponse({"success": True})
+    return JsonResponse({"success": False})

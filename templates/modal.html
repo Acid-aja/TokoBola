@@ -1,13 +1,13 @@
-<!-- Modal Add New Product -->
+<!-- Modal Add/Edit Product -->
 <div id="crudModal" class="hidden fixed inset-0 z-50 w-full flex items-center justify-center bg-gray-900 bg-opacity-70">
     <div id="crudModalContent"
-        class="bg-gray-900 text-white rounded-lg shadow-lg w-5/6 sm:w-3/5 md:w-1/2 lg:w-2/5 xl:w-1/3 max-h-screen overflow-y-auto border border-gray-800">
+        class="bg-gray-900 text-white rounded-lg shadow-lg w-5/6 sm:w-3/5 md:w-1/2 lg:w-2/5 xl:w-1/3 max-h-screen overflow-y-auto border border-gray-800 transform transition-all duration-200 scale-95 opacity-0">
 
         <!-- Modal header -->
         <div class="flex items-center justify-between p-4 border-b border-gray-800">
             <div>
-                <h3 class="text-xl font-semibold">Add New Product</h3>
-                <p class="text-sm text-gray-400 mt-1">Add your product in this page</p>
+                <h3 id="modalTitle" class="text-xl font-semibold">Add New Product</h3>
+                <p id="modalSubtitle" class="text-sm text-gray-400 mt-1">Add your product in this page</p>
             </div>
             <button type="button" class="text-gray-400 hover:text-white p-1.5 rounded-md" onclick="hideModal()">
                 <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -15,7 +15,6 @@
                         d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                         clip-rule="evenodd"></path>
                 </svg>
-                <span class="sr-only">Close modal</span>
             </button>
         </div>
 
@@ -23,6 +22,9 @@
         <div class="px-6 py-4 space-y-6">
             <form id="productForm">
                 {% csrf_token %}
+                <input type="hidden" id="mode" value="create">
+                <input type="hidden" id="editProductId">
+
                 <div class="mb-4">
                     <label for="name" class="block text-sm font-medium">Name</label>
                     <input type="text" id="name" name="name"
@@ -77,13 +79,13 @@
                 class="order-2 sm:order-1 px-6 py-3 border border-gray-700 text-gray-400 rounded-md font-medium hover:bg-gray-800 hover:text-white"
                 onclick="hideModal()">Cancel</button>
             <button type="submit" id="submitProduct" form="productForm"
-                class="order-1 sm:order-2 flex-1 bg-red-600 text-white px-6 py-3 rounded-md font-medium hover:bg-red-700">Add
-                Product</button>
+                class="order-1 sm:order-2 flex-1 bg-red-600 text-white px-6 py-3 rounded-md font-medium hover:bg-red-700">Add Product</button>
         </div>
     </div>
 </div>
 
 <script>
+    // === Show/Hide Modal ===
     function showModal() {
         const modal = document.getElementById('crudModal');
         const modalContent = document.getElementById('crudModalContent');
@@ -104,35 +106,81 @@
 
         setTimeout(() => {
             modal.classList.add('hidden');
+            resetModalToAddMode();
         }, 150);
     }
 
-    async function addProductEntry() {
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    function resetModalToAddMode() {
+        document.getElementById('productForm').reset();
+        document.getElementById('mode').value = 'create';
+        document.getElementById('editProductId').value = '';
+        document.getElementById('modalTitle').textContent = 'Add New Product';
+        document.getElementById('modalSubtitle').textContent = 'Add your product in this page';
+        document.getElementById('submitProduct').textContent = 'Add Product';
+    }
 
-        const response = await fetch("{% url 'main:add_product_entry_ajax' %}", {
+    // === OPEN EDIT MODAL ===
+    async function openEditModal(productId) {
+        try {
+            const response = await fetch(`/get-product/${productId}/`);
+            if (!response.ok) throw new Error('Failed to load product data');
+            const data = await response.json();
+
+            // Ganti ke mode edit
+            document.getElementById('mode').value = 'edit';
+            document.getElementById('editProductId').value = productId;
+            document.getElementById('modalTitle').textContent = 'Edit Product';
+            document.getElementById('modalSubtitle').textContent = 'Edit your product details here';
+            document.getElementById('submitProduct').textContent = 'Save Changes';
+
+            // Isi field
+            document.getElementById('name').value = data.name;
+            document.getElementById('price').value = data.price;
+            document.getElementById('description').value = data.description;
+            document.getElementById('thumbnail').value = data.thumbnail || '';
+            document.getElementById('category').value = data.category;
+            document.getElementById('is_featured').checked = data.is_featured;
+
+            showModal();
+        } catch (err) {
+            showToast('Error', err.message, 'error');
+        }
+    }
+
+    // === SUBMIT FORM ===
+    async function submitProductForm() {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const mode = document.getElementById('mode').value;
+        const productId = document.getElementById('editProductId').value;
+        const formData = new FormData(document.querySelector('#productForm'));
+
+        let url = "{% url 'main:add_product_entry_ajax' %}";
+        if (mode === 'edit') {
+            url = `/edit-product/${productId}/`;
+        }
+
+        const response = await fetch(url, {
             method: "POST",
-            headers: {
-                "X-CSRFToken": csrfToken
-            },
-            body: new FormData(document.querySelector('#productForm')),
+            headers: { "X-CSRFToken": csrfToken },
+            body: formData,
         });
 
         if (response.ok) {
-            document.getElementById("productForm").reset();
             hideModal();
-            showToast('Product added successfully!', '', 'success');
-            document.dispatchEvent(new CustomEvent('productAdded'));
+            showToast(
+                mode === 'edit' ? 'Product updated successfully!' : 'Product added successfully!',
+                '',
+                'success'
+            );
+            // Trigger event biar bisa auto-refresh list produk
+            document.dispatchEvent(new CustomEvent('productChanged'));
         } else {
-            showToast('Failed to add product.', '', 'error');
+            showToast('Failed to save product.', '', 'error');
         }
-
-        return false;
     }
-
 
     document.getElementById("productForm").addEventListener("submit", function (e) {
         e.preventDefault();
-        addProductEntry();
-    })
+        submitProductForm();
+    });
 </script>
