@@ -12,6 +12,11 @@ from django.urls import reverse
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+import requests
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.html import strip_tags
+import json
+from django.http import JsonResponse
 
 @login_required(login_url='/login')
 def show_main(request):
@@ -191,9 +196,7 @@ def delete_product(request, id):
         return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
 
 
-# ==================================
-# PERBAIKAN: add_product_entry_ajax
-# ==================================
+
 @require_POST
 @csrf_exempt  
 def add_product_entry_ajax(request):
@@ -210,9 +213,7 @@ def add_product_entry_ajax(request):
         first_error = next(iter(form.errors.values()))[0] if form.errors else "Data tidak valid"
         return JsonResponse({"success": False, "error": first_error}, status=400)
 
-# ==================================
-# PERBAIKAN: get_product (Tambah Cek Keamanan)
-# ==================================
+
 def get_product(request, id):
     try:
         product = Product.objects.get(pk=id)
@@ -232,9 +233,7 @@ def get_product(request, id):
     except Product.DoesNotExist:
         return JsonResponse({'error': 'Not found'}, status=404)
 
-# ==================================
-# PERBAIKAN: edit_product (Validasi + Keamanan)
-# ==================================
+
 def edit_product(request, id):
     try:
         product = get_object_or_404(Product, pk=id)
@@ -257,3 +256,46 @@ def edit_product(request, id):
             
     # Jika bukan POST
     return JsonResponse({"success": False, "error": "Metode request tidak valid"}, status=405)
+
+def proxy_image(request):
+    image_url = request.GET.get('url')
+    if not image_url:
+        return HttpResponse('No URL provided', status=400)
+    
+    try:
+        # Fetch image from external source
+        response = requests.get(image_url, timeout=10)
+        response.raise_for_status()
+        
+        # Return the image with proper content type
+        return HttpResponse(
+            response.content,
+            content_type=response.headers.get('Content-Type', 'image/jpeg')
+        )
+    except requests.RequestException as e:
+        return HttpResponse(f'Error fetching image: {str(e)}', status=500)
+    
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        title = strip_tags(data.get("title", ""))  # Strip HTML tags
+        content = strip_tags(data.get("content", ""))  # Strip HTML tags
+        category = data.get("category", "")
+        thumbnail = data.get("thumbnail", "")
+        is_featured = data.get("is_featured", False)
+        user = request.user
+        
+        new_news = Product(
+            title=title, 
+            content=content,
+            category=category,
+            thumbnail=thumbnail,
+            is_featured=is_featured,
+            user=user
+        )
+        new_news.save()
+        
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
