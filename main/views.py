@@ -263,8 +263,18 @@ def proxy_image(request):
         return HttpResponse('No URL provided', status=400)
     
     try:
-        # Fetch image from external source
-        response = requests.get(image_url, timeout=10)
+        # Fetch image from external source with fake browser headers
+        response = requests.get(
+            image_url,
+            headers={
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/120.0.0.0 Safari/537.36"
+                )
+            },
+            timeout=10
+        )
         response.raise_for_status()
         
         # Return the image with proper content type
@@ -278,24 +288,40 @@ def proxy_image(request):
 @csrf_exempt
 def create_product_flutter(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        title = strip_tags(data.get("title", ""))  # Strip HTML tags
-        content = strip_tags(data.get("content", ""))  # Strip HTML tags
-        category = data.get("category", "")
-        thumbnail = data.get("thumbnail", "")
-        is_featured = data.get("is_featured", False)
-        user = request.user
+        try:
+            data = json.loads(request.body)
+            
+
+            name = strip_tags(data.get("name", ""))          # Ganti dari title
+            description = strip_tags(data.get("description", "")) 
+            price = int(data.get("price", 0))                # Tambahkan price
+            category = data.get("category", "")
+            thumbnail = data.get("thumbnail", "")
+            is_featured = data.get("is_featured", False)
+            user = request.user
+
+            # Pastikan user sudah login
+            if not user.is_authenticated:
+                return JsonResponse({"status": "error", "message": "User not logged in"}, status=401)
+
+            # Buat objek Product, bukan News
+            new_product = Product(
+                user=user,
+                name=name,
+                price=price,
+                description=description,
+                category=category,
+                thumbnail=thumbnail,
+                is_featured=is_featured,
+            )
+            new_product.save()
+
+            return JsonResponse({"status": "success"}, status=200)
         
-        new_news = Product(
-            title=title, 
-            content=content,
-            category=category,
-            thumbnail=thumbnail,
-            is_featured=is_featured,
-            user=user
-        )
-        new_news.save()
-        
-        return JsonResponse({"status": "success"}, status=200)
+        except Exception as e:
+            # Tangani error jika ada, misal data tidak valid
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)
+
     else:
-        return JsonResponse({"status": "error"}, status=401)
+        # Method bukan POST
+        return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
