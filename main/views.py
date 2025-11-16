@@ -7,10 +7,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import datetime
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
-from django.http import HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
@@ -113,31 +112,66 @@ def show_json_by_id(request, Product_id):
 
 def register(request):
     form = UserCreationForm()
+    # Cek apakah ini request AJAX
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
+            
+            if is_ajax:
+                return JsonResponse({
+                    'success': True, 
+                    'message': 'Akun berhasil dibuat!', 
+                    'redirect': reverse('main:login')
+                })
+
             messages.success(request, 'Your account has been successfully created!')
             return redirect('main:login')
+        else:
+            # Jika form tidak valid, kirim error sebagai JSON untuk AJAX
+            if is_ajax:
+                # Ambil error pertama untuk ditampilkan di toast
+                first_error = next(iter(form.errors.values()))[0]
+                return JsonResponse({'success': False, 'error': first_error}, status=400)
+    
+    # Untuk request GET atau POST non-AJAX yang gagal, render halaman seperti biasa
     context = {'form':form}
     return render(request, 'register.html', context)
 
 def login_user(request):
-   if request.method == 'POST':
-      form = AuthenticationForm(data=request.POST)
+    # Cek apakah ini request AJAX
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
-      if form.is_valid():
-        user = form.get_user()
-        login(request, user)
-        response = HttpResponseRedirect(reverse("main:show_main"))
-        response.set_cookie('last_login', str(datetime.datetime.now()))
-        return response
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
 
-   else:
-      form = AuthenticationForm(request)
-   context = {'form': form}
-   return render(request, 'login.html', context)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+
+            if is_ajax:
+                return JsonResponse({
+                    'success': True, 
+                    'message': 'Login berhasil!', 
+                    'redirect': reverse('main:show_main')
+                })
+
+            response = HttpResponseRedirect(reverse("main:show_main"))
+            response.set_cookie('last_login', str(datetime.datetime.now()))
+            return response
+        else:
+            # Jika form tidak valid, kirim error sebagai JSON untuk AJAX
+            if is_ajax:
+                return JsonResponse({'success': False, 'error': 'Username atau password salah.'}, status=400)
+
+    else: # Request GET
+        form = AuthenticationForm(request)
+   
+    # Untuk request GET atau POST non-AJAX yang gagal, render halaman seperti biasa
+    context = {'form': form}
+    return render(request, 'login.html', context)
 
 def logout_user(request):
     logout(request)
@@ -145,75 +179,81 @@ def logout_user(request):
     response.delete_cookie('last_login')
     return response
 
-# def edit_product(request, id):
-#     product = get_object_or_404(Product, pk=id)
-#     form = ProductForm(request.POST or None, instance=product)
-#     if form.is_valid() and request.method == 'POST':
-#         form.save()
-#         return redirect('main:show_main')
-
-#     context = {
-#         'form': form
-#     }
-
-#     return render(request, "edit_product.html", context)
-
 def delete_product(request, id):
     if request.method == "POST":
         product = get_object_or_404(Product, pk=id)
+        # Tambahkan cek keamanan
+        if product.user != request.user:
+             return JsonResponse({'success': False, 'error': 'Unauthorized'}, status=403)
         product.delete()
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
 
 
+# ==================================
+# PERBAIKAN: add_product_entry_ajax
+# ==================================
 @require_POST
-@csrf_exempt
+@csrf_exempt  
 def add_product_entry_ajax(request):
-    if request.method == 'POST':
-        user = request.user if request.user.is_authenticated else None
-        name = request.POST.get('name')
-        price = request.POST.get('price')
-        description = request.POST.get('description')
-        thumbnail = request.POST.get('thumbnail')
-        category = request.POST.get('category')
-        is_featured = request.POST.get('is_featured') == 'on'
-
-        Product.objects.create(
-            user=user,
-            name=name,
-            price=int(price),
-            description=description,
-            thumbnail=thumbnail,
-            category=category,
-            is_featured=is_featured,
-        )
-        return JsonResponse({"status": "success"})
-    return JsonResponse({"status": "fail"}, status=400)
-
-def get_product(request, id):
-    from django.http import JsonResponse
-    product = Product.objects.get(pk=id)
-    return JsonResponse({
-        'id': product.id,
-        'name': product.name,
-        'price': product.price,
-        'description': product.description,
-        'thumbnail': product.thumbnail,
-        'category': product.category,
-        'is_featured': product.is_featured,
-    })
-
-def edit_product(request, id):
-    from django.http import JsonResponse
-    if request.method == "POST":
-        product = Product.objects.get(pk=id)
-        product.name = request.POST.get("name")
-        product.price = request.POST.get("price")
-        product.description = request.POST.get("description")
-        product.thumbnail = request.POST.get("thumbnail")
-        product.category = request.POST.get("category")
-        product.is_featured = bool(request.POST.get("is_featured"))
+    form = ProductForm(request.POST or None)
+    
+    if form.is_valid():
+        product = form.save(commit=False)
+        if request.user.is_authenticated:
+            product.user = request.user
         product.save()
-        return JsonResponse({"success": True})
-    return JsonResponse({"success": False})
+        return JsonResponse({"success": True, "message": "Produk berhasil ditambahkan!"})
+    else:
+        # Kirim error validasi pertama ke frontend
+        first_error = next(iter(form.errors.values()))[0] if form.errors else "Data tidak valid"
+        return JsonResponse({"success": False, "error": first_error}, status=400)
+
+# ==================================
+# PERBAIKAN: get_product (Tambah Cek Keamanan)
+# ==================================
+def get_product(request, id):
+    try:
+        product = Product.objects.get(pk=id)
+        # PERBAIKAN KEAMANAN: Hanya pemilik yang bisa ambil data untuk edit
+        if product.user and product.user != request.user:
+             return JsonResponse({'error': 'Unauthorized'}, status=403)
+             
+        return JsonResponse({
+            'id': product.id,
+            'name': product.name,
+            'price': product.price,
+            'description': product.description,
+            'thumbnail': product.thumbnail,
+            'category': product.category,
+            'is_featured': product.is_featured,
+        })
+    except Product.DoesNotExist:
+        return JsonResponse({'error': 'Not found'}, status=404)
+
+# ==================================
+# PERBAIKAN: edit_product (Validasi + Keamanan)
+# ==================================
+def edit_product(request, id):
+    try:
+        product = get_object_or_404(Product, pk=id)
+    except Product.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Produk tidak ditemukan"}, status=404)
+
+    if request.method == "POST":
+        # PERBAIKAN KEAMANAN: Cek kepemilikan
+        if product.user and product.user != request.user:
+            return JsonResponse({"success": False, "error": "Anda tidak punya izin mengedit produk ini"}, status=403)
+            
+        form = ProductForm(request.POST or None, instance=product)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({"success": True, "message": "Produk berhasil diperbarui"})
+        else:
+            # Kirim error validasi pertama ke frontend
+            first_error = next(iter(form.errors.values()))[0] if form.errors else "Data tidak valid"
+            return JsonResponse({"success": False, "error": first_error}, status=400)
+            
+    # Jika bukan POST
+    return JsonResponse({"success": False, "error": "Metode request tidak valid"}, status=405)
