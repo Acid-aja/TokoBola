@@ -17,6 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.html import strip_tags
 import json
 from django.http import JsonResponse
+from django.http import HttpResponse, HttpResponseForbidden
 
 @login_required(login_url='/login')
 def show_main(request):
@@ -325,3 +326,25 @@ def create_product_flutter(request):
     else:
         # Method bukan POST
         return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
+    
+@login_required(login_url='/auth/login/')
+def get_my_products_flutter(request):
+    product_list = Product.objects.filter(user=request.user)
+    data = [
+        {
+            'id': str(product.id),
+            'name': product.name,
+            'price': product.price,
+            'description': product.description,
+            'category': product.category,
+            'category_display': product.get_category_display(),
+            'thumbnail': product.thumbnail,
+            'views': product.views,
+            'is_featured': product.is_featured,
+            'user_id': product.user.id if product.user else None,
+            'user_username': product.user.username if product.user else None,
+        }
+        for product in product_list
+    ]
+
+    return JsonResponse(data, safe=False)
